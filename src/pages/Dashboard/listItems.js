@@ -11,38 +11,27 @@ import { BrowserRouter as Router, Link } from "react-router-dom";
 import MenuItem from "@material-ui/core/MenuItem";
 
 
-const StyledListItem = withStyles((theme) => ({
-  root: {
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white
-      }
-    }
-  }
-}))(ListItem);
-
 export const mainListItems = (
 
   <div>
-    <StyledListItem button to="/" component={Link} >
+    <ListItem button to="/" component={Link} >
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Home" />
-    </StyledListItem>
-    <StyledListItem button to="/yourEvents" component={Link}>
+    </ListItem>
+    <ListItem button>
       <ListItemIcon>
         <EventNote />
       </ListItemIcon>
       <ListItemText primary="Your Events" />
-    </StyledListItem>
-    <StyledListItem button>
+    </ListItem>
+    <ListItem button>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
       <ListItemText primary="Sponsors" />
-    </StyledListItem>
+    </ListItem>
   </div>
 );
 
