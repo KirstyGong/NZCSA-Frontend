@@ -5,13 +5,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import membershipCard from "../../assets/membership_card.jpg";
 import Image from "material-ui-image";
-import {
-  Avatar,
-  Grid,
-  Typography,
-  Chip,
-  TextField,
-} from "@material-ui/core";
+import { Avatar, Grid, Typography, Chip, TextField } from "@material-ui/core";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
@@ -20,6 +14,7 @@ import { styled } from "@material-ui/core/styles";
 import { deepPurple } from "@material-ui/core/colors";
 import DoneIcon from "@material-ui/icons/Done";
 import { SmallAvatar, VipBadge } from "../../components/VipBadget";
+var hash = require("short-hash");
 
 const CardImage = styled(Image)({
   borderRadius: 24,
@@ -49,6 +44,9 @@ const ProfileContent = styled("div")(({ theme }) => ({
 
 const DetailField = styled(TextField)({
   margin: "12px 0px 12px 0px",
+  "& .MuiInputBase-root.Mui-disabled": {
+    color: "rgba(0, 0, 0)",
+  },
 });
 
 const styles = (theme) => ({
@@ -91,12 +89,52 @@ export default function UserInforDialog(props) {
     props.close(false);
   };
 
+  const validDate = "0103";
+
+  const hashid = () => {
+    const hashed = hash(props.userInfo.email);
+    let processedId = "";
+    let counter = 0;
+    for (const i of hashed) {
+      processedId += i;
+      counter++;
+
+      if (counter == 4) {
+        processedId += "-";
+        counter = 0;
+      }
+    }
+    return processedId.slice(0, -1);
+  };
 
   const content = props.userInfo.isMembership ? (
     <DialogContent id="alert-dialog-description" dividers>
       <Grid container xs={12} spacing={2}>
         <Grid item sm={12} md={12} xs={12}>
-          <CardImage aspectRatio={1.7} src={membershipCard} color="transparent" />
+          <div>
+            <CardImage
+              aspectRatio={1.7}
+              src={membershipCard}
+              color="transparent"
+            />
+            <Typography
+              variant="body2"
+              component="div"
+              gutterBottom
+              style={{
+                "word-break": "break-all",
+                fontWeight: "bold",
+                position: "relative",
+                top: "-20px",
+                fontSize: "10px",
+                zIndex: "10",
+                textAlign: "center",
+              }}
+            >
+              {new Date().getFullYear() + "-" + validDate + "-" + hashid()}
+            </Typography>
+          </div>
+
           <ProfileHeader>
             <VipBadge
               overlap="circle"
@@ -109,70 +147,96 @@ export default function UserInforDialog(props) {
               <ProfileBadge>{props.userInfo.firstname.charAt(0)}</ProfileBadge>
             </VipBadge>
             <Typography
-              gutterBottom
               variant="h3"
-              style={{ fontWeight: "bold", paddingTop: 14 }}
+              style={{
+                fontWeight: "bold",
+                paddingTop: 14,
+                textAlign: "center",
+                textTransform: 'capitalize'
+              }}
             >
               {props.userInfo.firstname} {props.userInfo.lastname}
+            </Typography>
+            <Typography variant="p" style={{ color: "grey", fontSize: 20 }}>
+              {props.userInfo.stdentId}
+            </Typography>
+            <Typography
+              gutterBottom
+              variant="p"
+              style={{ color: "grey", fontSize: 15 }}
+            >
+              {props.userInfo.university}
             </Typography>
             <Chip
               icon={<DoneIcon />}
               label="Member"
               color="secondary"
               size="small"
+              style={{ marginBottom: 10 }}
             />
+            <Typography
+              variant="p"
+              style={{ fontSize: 15, textAlign: "center" }}
+            >
+              <div>
+                This member's Student ID Number has been verified by NZCSA.{" "}
+              </div>
+              <div>
+                If in doubt, please inquire via &nbsp;
+                <Typography
+                  variant="p"
+                  style={{ textDecoration: "underline", color: "blue" }}
+                >
+                  verify@nzcsa.com
+                </Typography>
+              </div>
+            </Typography>
           </ProfileHeader>
         </Grid>
         <Grid item xs={12}>
           <ProfileContent>
             <DetailField
+              disabled
               id="filled-read-only-input"
               label="Email"
               defaultValue={props.userInfo.email}
               InputProps={{
                 readOnly: true,
               }}
-              variant="outlined"
+              variant="standard"
               fullWidth
             />
             <DetailField
+              disabled
               id="filled-read-only-input"
               label="Gender"
               defaultValue={props.userInfo.gender || "Not specified"}
               InputProps={{
                 readOnly: true,
               }}
-              variant="outlined"
+              variant="standard"
               fullWidth
             />
             <DetailField
-              id="filled-read-only-input"
-              label="University"
-              defaultValue={props.userInfo.university || "Not specified"}
-              InputProps={{
-                readOnly: true,
-              }}
-              variant="outlined"
-              fullWidth
-            />
-            <DetailField
+              disabled
               id="filled-read-only-input"
               label="Faculty/Major"
               defaultValue={props.userInfo.faculty || "Not specified"}
               InputProps={{
                 readOnly: true,
               }}
-              variant="outlined"
+              variant="standard"
               fullWidth
             />
             <DetailField
+              disabled
               id="filled-read-only-input"
               label="Phone"
               defaultValue={props.userInfo.phone || "Not specified"}
               InputProps={{
                 readOnly: true,
               }}
-              variant="outlined"
+              variant="standard"
               fullWidth
             />
           </ProfileContent>
@@ -193,7 +257,7 @@ export default function UserInforDialog(props) {
       aria-describedby="alert-dialog-description"
       fullWidth
       maxWidth="sm"
-    // className={classes.root}
+      // className={classes.root}
     >
       <DialogTitle id="alert-dialog-title" onClose={handleDialogClose}>
         {"User Information"}
